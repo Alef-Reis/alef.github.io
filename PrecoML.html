@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Preço</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Calculadora de Preço</h2>
+    <input type="text" id="preco" placeholder="Digite o preço" oninput="formatarNumero(this)" maxlength="15">
+    <div>
+        <p>Valor com 7,89%: <span id="valor2">R$ 0,00</span> <button onclick="copiarValorNumerico('valor2')">Copiar</button></p>
+        <p>Valor com 1,9111%: <span id="valor1">R$ 0,00</span> <button onclick="copiarValorNumerico('valor1')">Copiar</button></p>
+        <p>Valor com 11,11112%: <span id="valor3">R$ 0,00</span> <button onclick="copiarValorNumerico('valor3')">Copiar</button></p>
+    </div>
+
+    <script>
+        function formatarNumero(input) {
+            let valor = input.value.replace(/\D/g, "");
+            let numero = (parseFloat(valor) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+            input.value = numero;
+            calcular();
+        }
+
+        function calcular() {
+            let preco = document.getElementById('preco').value.replace(/\./g, '').replace(/,/g, '.');
+            preco = parseFloat(preco);
+            if (!isNaN(preco)) {
+                let valor1 = preco * (1 + 1.9111 / 100);
+                let valor2 = preco * (1 + 7.89 / 100);
+                let valor3 = preco * (1 + 11.11112 / 100);
+                document.getElementById('valor1').textContent = valor1.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('valor2').textContent = valor2.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('valor3').textContent = valor3.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            } else {
+                document.getElementById('valor1').textContent = 'R$ 0,00';
+                document.getElementById('valor2').textContent = 'R$ 0,00';
+                document.getElementById('valor3').textContent = 'R$ 0,00';
+            }
+        }
+
+        function copiarValorNumerico(id) {
+            let valorFormatado = document.getElementById(id).textContent;
+            let valorNumerico = valorFormatado.replace(/[R$\s\.]/g, '').replace(/,/g, '.');
+            navigator.clipboard.writeText(valorNumerico).then(() => {
+                alert('Valor copiado: ' + valorNumerico);
+            });
+        }
+    </script>
+</body>
+</html>
