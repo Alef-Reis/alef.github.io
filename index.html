@@ -3,28 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Preço</title>
+    <title>Calculadora de preços Loja Integrada</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             max-width: 400px;
             margin: 50px auto;
             text-align: center;
+            background-color: #fafafa;
         }
         input, button {
             margin: 10px;
             padding: 10px;
             font-size: 16px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+        h2 {
+            color: #333;
+        }
+        p {
+            font-size: 18px;
+        }
+        span {
+            font-weight: bold;
+        }
+        button {
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <h2>Calculadora de Preço</h2>
-    <input type="text" id="preco" placeholder="Digite o preço" oninput="formatarNumero(this)" maxlength="15">
+    <h2>Calculadora de preços Loja Integrada</h2>
+
+    <input type="text" id="preco" placeholder="Valor que deseja receber" oninput="formatarNumero(this)" maxlength="15">
+
     <div>
-        <p>Valor com 7,89%: <span id="valor2">R$ 0,00</span> <button onclick="copiarValorNumerico('valor2')">Copiar</button></p>
-        <p>Valor com 1,9111%: <span id="valor1">R$ 0,00</span> <button onclick="copiarValorNumerico('valor1')">Copiar</button></p>
-        <p>Valor com 11,11112%: <span id="valor3">R$ 0,00</span> <button onclick="copiarValorNumerico('valor3')">Copiar</button></p>
+        <p>Valor com + 10%: 
+            <span id="valor3">R$ 0,00</span> 
+            <button onclick="copiarValorNumerico('valor3')">Copiar</button>
+        </p>
+
+        <p>Valor com todas as taxas (Site + PagBank): 
+            <span id="valorFinal">R$ 0,00</span> 
+            <button onclick="copiarValorNumerico('valorFinal')">Copiar</button>
+        </p>
     </div>
 
     <script>
@@ -39,16 +70,16 @@
             let preco = document.getElementById('preco').value.replace(/\./g, '').replace(/,/g, '.');
             preco = parseFloat(preco);
             if (!isNaN(preco)) {
-                let valor1 = preco * (1 + 1.9111 / 100);
-                let valor2 = preco * (1 + 7.89 / 100);
+                // Valor com +10%
                 let valor3 = preco * (1 + 11.11112 / 100);
-                document.getElementById('valor1').textContent = valor1.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                document.getElementById('valor2').textContent = valor2.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                // Valor considerando todas as taxas (12,75001%)
+                let valorFinal = preco / (1 - 0.1275001);
+
                 document.getElementById('valor3').textContent = valor3.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById('valorFinal').textContent = valorFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             } else {
-                document.getElementById('valor1').textContent = 'R$ 0,00';
-                document.getElementById('valor2').textContent = 'R$ 0,00';
                 document.getElementById('valor3').textContent = 'R$ 0,00';
+                document.getElementById('valorFinal').textContent = 'R$ 0,00';
             }
         }
 
