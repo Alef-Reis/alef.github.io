@@ -42,17 +42,17 @@
     </style>
 </head>
 <body>
-    <h2>Calculadora de preços Loja Integrada</h2>
+    <h2>Calculadora de preços</h2>
 
     <input type="text" id="preco" placeholder="Valor que deseja receber" oninput="formatarNumero(this)" maxlength="15">
 
     <div>
-        <p>Valor com + 10%: 
-            <span id="valor3">R$ 0,00</span> 
-            <button onclick="copiarValorNumerico('valor3')">Copiar</button>
+        <p>Valor com taxas <b>PagBank:</b> 
+            <span id="valorPagbank">R$ 0,00</span> 
+            <button onclick="copiarValorNumerico('valorPagbank')">Copiar</button>
         </p>
 
-        <p>Valor com todas as taxas (Site + PagBank): 
+        <p>Valor com taxas <b>Site + PagBank:</b> 
             <span id="valorFinal">R$ 0,00</span> 
             <button onclick="copiarValorNumerico('valorFinal')">Copiar</button>
         </p>
@@ -67,18 +67,23 @@
         }
 
         function calcular() {
-            let preco = document.getElementById('preco').value.replace(/\./g, '').replace(/,/g, '.');
-            preco = parseFloat(preco);
+            let precoText = document.getElementById('preco').value;
+            let preco = parseFloat(precoText.replace(/\./g, '').replace(/,/g, '.'));
             if (!isNaN(preco)) {
-                // Valor com +10%
-                let valor3 = preco * (1 + 11.11112 / 100);
-                // Valor considerando todas as taxas (12,75001%)
-                let valorFinal = preco / (1 - 0.127504);
+                // Taxas
+                // taxaPagbank ajustada com alta precisão para bater com a simulação (ex.: 11.650 -> 13.246,17)
+                const taxaPagbank = 0.1205004918402829; // ≈ 12,05004918402829%
+                const taxaSitePagbank = 0.1267; // 12,67%
 
-                document.getElementById('valor3').textContent = valor3.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                // Cálculos (valor bruto a cobrar)
+                let valorPagbank = preco / (1 - taxaPagbank);
+                let valorFinal = preco / (1 - taxaSitePagbank);
+
+                // Exibir resultados
+                document.getElementById('valorPagbank').textContent = valorPagbank.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 document.getElementById('valorFinal').textContent = valorFinal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             } else {
-                document.getElementById('valor3').textContent = 'R$ 0,00';
+                document.getElementById('valorPagbank').textContent = 'R$ 0,00';
                 document.getElementById('valorFinal').textContent = 'R$ 0,00';
             }
         }
@@ -93,4 +98,3 @@
     </script>
 </body>
 </html>
-
